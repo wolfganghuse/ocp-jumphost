@@ -1,0 +1,23 @@
+# Local .terraform directories
+**/.terraform/*
+**/.terraform*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+state/*
+
+terraform/cert/*.key
+terraform/cert/*.crt
+
+secrets.linux.auto.pkrvars.hcl
+.DS_Store
+packer/manifest.json
+packer/manifest.json
+
+.env/*
+
+files/ca.crt
+files/ps.json
+
+.vscode

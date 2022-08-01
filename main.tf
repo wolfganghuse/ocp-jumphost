@@ -11,66 +11,6 @@ terraform{
   }
 }
 
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
-}
-
-provider "nutanix" {
-  username  = var.PC_USER
-  password  = var.PC_PASS
-  endpoint  = var.PC_ENDPOINT
-  insecure  = true
-  port      = 9440
-}
-
-variable "cloudflare_api_token" {
-  type = string
-}
-
-variable "PC_PASS" {
-  type = string
-}
-
-variable "OCP_API_VIP" {
-  type = string
-}
-
-variable "OCP_INGRESS_VIP" {
-  type = string
-}
-
-variable "OCP_BASEDOMAIN" {
-  type = string
-}
-
-variable "OCP_SUBDOMAIN" {
-  type = string
-}
-
-variable "PC_USER" {
-  type = string
-}
-
-variable "PC_ENDPOINT" {
-  type = string
-}
-
-variable "nutanix_subnet" {
-  type = string
-}
-
-variable "nutanix_cluster" {
-  type = string
-}
-
-variable "packer_source_image" {
-  type = string
-}
-
-variable "installer_name" {
-  type = string
-}
-
 data "nutanix_subnet" "net" {
   subnet_name = var.nutanix_subnet
 }
@@ -88,25 +28,21 @@ data "template_file" "cred_string" {
 }
 
 data "cloudflare_zone" "this" {
-  name = "dachlab.net"
+  name = var.OCP_BASEDOMAIN
 }
 
 resource "cloudflare_record" "API" {
   zone_id = data.cloudflare_zone.this.id
   name    = format("api.%s", var.OCP_SUBDOMAIN)
-  value   = "10.38.59.11"
+  value   = var.OCP_API_VIP
   type    = "A"
-  ttl     = 3600
-  proxied = false
 }
 
 resource "cloudflare_record" "INGRESS" {
   zone_id = data.cloudflare_zone.this.id
   name    = format("*.apps.%s", var.OCP_SUBDOMAIN)
-  value   = "10.38.59.12"
+  value   = var.OCP_INGRESS_VIP
   type    = "A"
-  ttl     = 3600
-  proxied = false
 }
 
 resource "cloudflare_record" "PC" {
@@ -114,12 +50,10 @@ resource "cloudflare_record" "PC" {
   name    = format("pc-%s", var.OCP_SUBDOMAIN)
   value   = var.PC_ENDPOINT
   type    = "A"
-  ttl     = 3600
-  proxied = false
 }
 
 resource "nutanix_image" "source_image" {
-  source_uri = var.packer_source_image
+  source_uri = var.JUMPHOST_IMAGE
   name = "ubuntu-20.04"
 }
 
@@ -152,9 +86,9 @@ resource "nutanix_virtual_machine" "installer" {
     }
   }
 
-  guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tftpl", {
+  guest_customization_cloud_init_user_data = base64encode(templatefile("./templates/cloud-config.tftpl", {
     machine_name = var.installer_name
-    ssh_key = file("~/.ssh/hpoc.pub")
+    ssh_key = file(var.JUMPHOST_PUBLIC_SSH)
   }))
 
 
@@ -162,41 +96,41 @@ resource "nutanix_virtual_machine" "installer" {
   connection {
     user     = "ubuntu"  
     type     = "ssh"
-    private_key = file("~/.ssh/hpoc")
+    private_key = file(var.JUMPHOST_PRIVATE_SSH)
     host    = self.nic_list_status[0].ip_endpoint_list[0].ip
   }
 
   provisioner "file" {
-    content    = templatefile("./credentials.tftpl", {
+    content    = templatefile("./templates/credentials.tftpl", {
     user = var.PC_USER
     password = var.PC_PASS
     })
     destination = "./credentials"
   }
 
-  provisioner "file" {
-    source      = "cert"
-    destination = "."
-  }
-  
   provisioner "remote-exec" {
-    script = "files/prereq.sh"
+    inline = [
+      "mkdir ~/ipi"
+    ]
   }
 
   provisioner "file" {
-    source      = "pullsecret/ps.json"
-    destination = "/home/ubuntu/ipi/ps.json"
+    source      = "files/"
+    destination = "ipi"
+  }
+  provisioner "remote-exec" {
+    script = "scripts/prereq.sh"
   }
 
   provisioner "file" {
-    content    = templatefile("./openshift-machine-api-nutanix-credentials-credentials.tftpl", {
+    content    = templatefile("./templates/openshift-machine-api-nutanix-credentials-credentials.tftpl", {
     credentials = base64encode(data.template_file.cred_string.rendered)
     })
     destination = "./ipi/openshift-machine-api-nutanix-credentials-credentials.yaml"
   }
 
   provisioner "file" {
-    content    = templatefile("./install-config.tftpl", {
+    content    = templatefile("./templates/install-config.tftpl", {
     user = var.PC_USER
     password = var.PC_PASS
     basedomain = var.OCP_BASEDOMAIN
@@ -207,26 +141,33 @@ resource "nutanix_virtual_machine" "installer" {
     peip = data.nutanix_cluster.cluster.external_ip
     peuuid = data.nutanix_cluster.cluster.id
     subnetuuid = data.nutanix_subnet.net.id
-    pullsecret = file("pullsecret/ps.json")
+    pullsecret = file("files/ps.json")
+    ssh = file(var.JUMPHOST_PUBLIC_SSH)
     })
     destination = "./ipi/install-config.yaml"
   }
 
   provisioner "file" {
-    source      = "~/.ssh/hpoc"
-    destination = "/home/ubuntu/.ssh/hpoc"
+    content    = templatefile("./templates/csi.tftpl", {
+    user = var.PC_USER
+    password = var.PC_PASS
+    endpoint = data.nutanix_cluster.cluster.external_ip
+    container = var.CONTAINER
+    })
+    destination = "./ipi/csi.sh"
+  }
+
+  provisioner "file" {
+    source      = var.JUMPHOST_PRIVATE_SSH
+    destination = "/home/ubuntu/.ssh/remote"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/hpoc",
-      "sudo chmod 0600 /home/ubuntu/.ssh/hpoc"
+      "sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/remote",
+      "sudo chmod 0755 /home/ubuntu/ipi/*.sh",
+      "sudo chmod 0600 /home/ubuntu/.ssh/remote"
     ]
   }
 
-}
-
-# Show IP address
-output "ip_address" {
-  value = nutanix_virtual_machine.installer.nic_list_status[0].ip_endpoint_list[0].ip
 }
