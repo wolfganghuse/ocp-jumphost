@@ -6,6 +6,14 @@ variable "PC_PASS" {
   type = string
 }
 
+variable "PE_USER" {
+  type = string
+}
+
+variable "PE_PASS" {
+  type = string
+}
+
 variable "JUMPHOST_PRIVATE_SSH" {
   type = string
 }

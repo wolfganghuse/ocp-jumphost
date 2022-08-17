@@ -149,8 +149,8 @@ resource "nutanix_virtual_machine" "installer" {
 
   provisioner "file" {
     content    = templatefile("./templates/csi.tftpl", {
-    user = var.PC_USER
-    password = var.PC_PASS
+    user = var.PE_USER
+    password = var.PE_PASS
     endpoint = data.nutanix_cluster.cluster.external_ip
     container = var.CONTAINER
     })
