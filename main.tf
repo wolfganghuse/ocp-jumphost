@@ -130,6 +130,13 @@ resource "nutanix_virtual_machine" "installer" {
   }
 
   provisioner "file" {
+    content    = templatefile("./templates/.kubectl-karbon.tftpl", {
+    user = var.PC_USER
+    address = var.PC_ENDPOINT})
+    destination = "./.kubectl-karbon.yaml"
+  }
+
+  provisioner "file" {
     content    = templatefile("./templates/install-config.tftpl", {
     user = var.PC_USER
     password = var.PC_PASS
