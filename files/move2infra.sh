@@ -14,14 +14,27 @@ data:
   config.yaml: |
     enableUserWorkload: true
     alertmanagerMain:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: nutanix-volume
+          resources:
+            requests:
+              storage: 20Gi
       tolerations:
       - key: "node-role.kubernetes.io/infra"
         operator: "Exists"
         value: ""
-        effect: "NoSchedule"    
+        effect: "NoSchedule"
       nodeSelector:
         node-role.kubernetes.io/infra: ""
     prometheusK8s:
+      retention: 15d
+      volumeClaimTemplate:
+        spec:
+          storageClassName: nutanix-volume
+          resources:
+            requests:
+              storage: 2000Gi
       tolerations:
       - key: "node-role.kubernetes.io/infra"
         operator: "Exists"
