@@ -21,8 +21,8 @@ sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
 
 curl -O http://10.42.194.11/Users/Huse/openshift-tests
 
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/fast-4.11/openshift-client-linux.tar.gz
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/fast-4.11/openshift-install-linux.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.11/openshift-client-linux.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.11/openshift-install-linux.tar.gz
 
 tar xvzf openshift-client-linux.tar.gz
 tar xvzf openshift-install-linux.tar.gz
