@@ -16,7 +16,8 @@ packer/manifest.json
 packer/manifest.json
 
 .env/*
-
+*.key
+*.crt
 files/ca.crt
 files/ps.json
 

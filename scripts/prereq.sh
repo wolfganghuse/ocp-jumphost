@@ -9,8 +9,16 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
 
+sudo apt install mkisofs
+sudo apt install unzip
+export PACKER_RELEASE="1.8.3"
+
+wget https://releases.hashicorp.com/packer/${PACKER_RELEASE}/packer_${PACKER_RELEASE}_linux_amd64.zip
+unzip packer_${PACKER_RELEASE}_linux_amd64.zip
+sudo mv packer /usr/local/bin
 
 #curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 wget https://github.com/derailed/k9s/releases/download/v0.26.0/k9s_Linux_x86_64.tar.gz
 tar xvzf k9s_Linux_x86_64.tar.gz
@@ -19,11 +27,11 @@ sudo install -o root -g root -m 0755 k9s /usr/local/bin/k9s
 curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.2.1/clusterctl-linux-amd64 -o clusterctl
 sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
 
-curl -O http://10.42.194.11/Users/Huse/openshift-tests
+#curl -O http://10.42.194.11/Users/Huse/openshift-tests
 
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.11/openshift-client-linux.tar.gz
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.11/openshift-install-linux.tar.gz
-curl -O https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.11/oc-mirror.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.12/openshift-client-linux.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.12/openshift-install-linux.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.12/oc-mirror.tar.gz
 
 tar xvzf openshift-client-linux.tar.gz
 tar xvzf openshift-install-linux.tar.gz
@@ -46,6 +54,6 @@ sudo install openshift-tests /usr/local/bin
 git clone https://github.com/wolfganghuse/ocp-stress
 ./ocp-stress/install.sh
 
-git clone https://github.com/cloud-bulldozer/e2e-benchmarking
+#git clone https://github.com/cloud-bulldozer/e2e-benchmarking
 
-git clone https://github.com/wolfganghuse/containerdays-demo
+#git clone https://github.com/wolfganghuse/containerdays-demo

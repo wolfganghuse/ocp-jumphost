@@ -2,7 +2,10 @@ terraform{
   required_providers{
     nutanix = {
       source = "nutanix/nutanix"
-      version = "~> 1.3.0"
+    }
+    acme = {
+      source  = "vancluever/acme"
+      version = "~> 2.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
@@ -19,13 +22,6 @@ data "nutanix_cluster" "cluster" {
   name = var.nutanix_cluster
 }
 
-data "template_file" "cred_string" {
-  template = "[{\"type\":\"basic_auth\",\"data\":{\"prismCentral\":{\"username\":\"$${user}\",\"password\":\"$${pass}\"},\"prismElements\":null}}]"
-    vars = {
-      user = var.PC_USER
-      pass = var.PC_PASS
-  }
-}
 
 data "cloudflare_zone" "this" {
   name = var.OCP_BASEDOMAIN
@@ -55,6 +51,21 @@ resource "cloudflare_record" "PC" {
 resource "nutanix_image" "source_image" {
   source_uri = var.JUMPHOST_IMAGE
   name = "ubuntu-20.04"
+}
+
+resource "local_file" "cert_file"{
+    content      = acme_certificate.certificate.certificate_pem
+    filename = format("./%s.crt",var.OCP_SUBDOMAIN )
+}
+
+resource "local_file" "key_file" {
+    content      = acme_certificate.certificate.private_key_pem
+    filename = format("./%s.key",var.OCP_SUBDOMAIN )
+}
+
+resource "local_file" "ca_file" {
+    content      = acme_certificate.certificate.issuer_pem
+    filename = format("./ca-%s.crt",var.OCP_SUBDOMAIN )
 }
 
 resource "nutanix_virtual_machine" "installer" {
@@ -90,14 +101,22 @@ resource "nutanix_virtual_machine" "installer" {
     machine_name = var.installer_name
     ssh_key = file(var.JUMPHOST_PUBLIC_SSH)
   }))
+}
 
-
+resource "null_resource" "bastion" {
 
   connection {
     user     = "ubuntu"  
     type     = "ssh"
     private_key = file(var.JUMPHOST_PRIVATE_SSH)
-    host    = self.nic_list_status[0].ip_endpoint_list[0].ip
+    host    = nutanix_virtual_machine.installer.nic_list_status[0].ip_endpoint_list[0].ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "rm -rf ~/ipi",
+      "mkdir ~/ipi"
+    ]
   }
 
   provisioner "file" {
@@ -108,26 +127,42 @@ resource "nutanix_virtual_machine" "installer" {
     destination = "./credentials"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir ~/ipi"
-    ]
+  provisioner "file" {
+    content    = templatefile("./templates/certs.tftpl", {
+    ocp_subdomain = var.OCP_SUBDOMAIN
+    })
+    destination = "./ipi/certs.sh"
   }
 
   provisioner "file" {
     source      = "files/"
     destination = "ipi"
   }
+
+  provisioner "file" {
+    content      = acme_certificate.certificate.certificate_pem
+    destination = format("./ipi/%s.crt", var.OCP_SUBDOMAIN)
+  }
+  provisioner "file" {
+    content      = acme_certificate.certificate.private_key_pem
+    destination = format("./ipi/%s.key", var.OCP_SUBDOMAIN)
+  }
+    provisioner "file" {
+    content      = acme_certificate.certificate.issuer_pem
+    destination = "./ipi/ca.crt"
+  }
+  
   provisioner "remote-exec" {
     script = "scripts/prereq.sh"
   }
 
   provisioner "file" {
     content    = templatefile("./templates/openshift-machine-api-nutanix-credentials-credentials.tftpl", {
-    credentials = base64encode(data.template_file.cred_string.rendered)
+    credentials = base64encode(format("[{\"type\":\"basic_auth\",\"data\":{\"prismCentral\":{\"username\":\"%s\",\"password\":\"%s\"},\"prismElements\":null}}]",var.PC_USER,var.PC_PASS))
     })
     destination = "./ipi/openshift-machine-api-nutanix-credentials-credentials.yaml"
   }
+
 
   provisioner "file" {
     content    = templatefile("./templates/.kubectl-karbon.tftpl", {
@@ -145,6 +180,7 @@ resource "nutanix_virtual_machine" "installer" {
     apivip = var.OCP_API_VIP
     ingressvip = var.OCP_INGRESS_VIP
     address = format("pc-%s.%s",var.OCP_SUBDOMAIN,var.OCP_BASEDOMAIN)
+    machinecidr = format("%s/%s",data.nutanix_subnet.net.subnet_ip,data.nutanix_subnet.net.prefix_length)
     peip = data.nutanix_cluster.cluster.external_ip
     peuuid = data.nutanix_cluster.cluster.id
     subnetuuid = data.nutanix_subnet.net.id

@@ -1,5 +1,7 @@
 #cloud-config
 hostname: ${machine_name}
-ssh_pwauth: false
+password: nutanix.1
+chpasswd: { expire: False }
+ssh_pwauth: true
 ssh_authorized_keys:
   - "${ssh_key}"

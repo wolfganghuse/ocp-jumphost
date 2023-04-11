@@ -1,0 +1,7 @@
+#add CA to clusterwide proxy config
+oc --kubeconfig=auth/kubeconfig create configmap letsencrypt-ca --from-file=ca-bundle.crt=ca.crt -n openshift-config
+oc --kubeconfig=auth/kubeconfig patch proxy/cluster --type=merge --patch='{"spec":{"trustedCA":{"name":"letsencrypt-ca"}}}'
+
+#add Cert to ingress config
+oc --kubeconfig=auth/kubeconfig --namespace openshift-ingress create secret tls ${ocp_subdomain}-certs-default --cert=${ocp_subdomain}.crt --key=${ocp_subdomain}.key
+oc --kubeconfig=auth/kubeconfig patch --type=merge --namespace openshift-ingress-operator ingresscontrollers/default --patch '{"spec":{"defaultCertificate":{"name":"${ocp_subdomain}-certs-default"}}}'
