@@ -163,6 +163,12 @@ resource "null_resource" "bastion" {
     destination = "./ipi/openshift-machine-api-nutanix-credentials-credentials.yaml"
   }
 
+  provisioner "file" {
+    content    = templatefile("./templates/openshift-cloud-controller-manager-nutanix-credentials-credentials.tftpl", {
+    credentials = base64encode(format("[{\"type\":\"basic_auth\",\"data\":{\"prismCentral\":{\"username\":\"%s\",\"password\":\"%s\"},\"prismElements\":null}}]",var.PC_USER,var.PC_PASS))
+    })
+    destination = "./ipi/openshift-cloud-controller-manager-nutanix-credentials-credentials.yaml"
+  }
 
   provisioner "file" {
     content    = templatefile("./templates/.kubectl-karbon.tftpl", {
