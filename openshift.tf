@@ -7,7 +7,7 @@ module "openshift-cluster" {
 
   PC_USER           = var.PC_USER
   PC_PASS           = var.PC_PASS
-  PC_ENDPOINT       = "az01pc01.ocpnvd.dachlab.net"
+  PC_ENDPOINT       = format("pc-%s.%s",var.OCP_SUBDOMAIN,var.OCP_BASEDOMAIN)
   
   ssh_priv          = var.JUMPHOST_PRIVATE_SSH
   ssh_pub           = var.JUMPHOST_PUBLIC_SSH
