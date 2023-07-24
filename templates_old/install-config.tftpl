@@ -5,9 +5,9 @@ compute:
   hyperthreading: Enabled
   name: worker
   platform:
-#    nutanix:
-#      cpus: 8
-#      memoryMib: 16384
+    nutanix:
+      cpus: 4
+      memoryMib: 16384
   replicas: 3
 controlPlane:
   architecture: amd64
@@ -52,3 +52,4 @@ publish: External
 pullSecret: '${pullsecret}'
 sshKey: |
   ${ssh}
+${appends}

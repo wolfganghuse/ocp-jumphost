@@ -1,0 +1,13 @@
+oc --kubeconfig=auth/kubeconfig patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
+oc --kubeconfig=auth/kubeconfig patch image.config cluster --type=merge  --patch-file=/dev/stdin <<-EOF
+{
+  "spec":{
+    "registrySources":{
+      "containerRuntimeSearchRegistries":["${mirror}"],
+      "allowedRegistries":["${mirror}","quay.io/openshift-release-dev","registry.redhat.io","registry.connect.redhat.com","k8s.gcr.io/sig-storage"]
+    }
+  }
+}
+EOF
+
+oc --kubeconfig=auth/kubeconfig patch configs.samples.operator.openshift.io/cluster --patch '{"spec":{"samplesRegistry": "${mirror}" }}' --type=merge

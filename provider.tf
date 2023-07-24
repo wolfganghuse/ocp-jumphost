@@ -1,4 +1,20 @@
+terraform{
+  required_providers{
+    nutanix = {
+      source = "nutanix/nutanix"
+    }
+    acme = {
+      source  = "vancluever/acme"
+      version = "= 2.10"
+    }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.0"
+    }
+  }
+}
 provider "nutanix" {
+  alias     = "AZ01"
   username  = var.PC_USER
   password  = var.PC_PASS
   endpoint  = var.PC_ENDPOINT

@@ -1,0 +1,9 @@
+additionalTrustBundle: |
+  ${ca}
+imageContentSources:
+  - mirrors:
+    - ${mirror}/${mirror_repo}/openshift/release
+    source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+  - mirrors:
+    - ${mirror}/${mirror_repo}/openshift/release-images
+    source: quay.io/openshift-release-dev/ocp-release/Users/wolfgang.huse/Documents/Projects/ocpnvd/modules/openshift/templates/ps.tftpl
