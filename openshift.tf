@@ -17,7 +17,7 @@ module "openshift-cluster" {
   ssh_priv          = var.JUMPHOST_PRIVATE_SSH
   ssh_pub           = var.JUMPHOST_PUBLIC_SSH
   user              = "ubuntu"
-  bastion_fqdn      = local.bastion_fqdn
+  bastion_fqdn      = nutanix_virtual_machine.installer.nic_list_status[0].ip_endpoint_list[0].ip
   basedomain        = var.OCP_BASEDOMAIN
   mirror            = var.USE_MIRROR
   mirror_repo       = var.MIRROR_REPO

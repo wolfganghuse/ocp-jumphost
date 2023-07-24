@@ -114,7 +114,7 @@ resource "null_resource" "installer" {
     peuuid = data.nutanix_cluster.cluster.id
     subnetuuid = data.nutanix_subnet.net.id
     machinecidr = format("%s/%s",data.nutanix_subnet.net.subnet_ip,data.nutanix_subnet.net.prefix_length)
-    pullsecret = var.mirror ? templatefile("./templates/ps.tftpl", {
+    pullsecret = var.mirror ? templatefile("${path.module}/templates/ps.tftpl", {
       mirror = var.mirror_host
       mirror_repo = var.mirror_repo
     }) : var.pullsecret
@@ -169,7 +169,7 @@ resource "null_resource" "bastion_disconnected" {
 
   
   connection {
-    user     = "rhel"  
+    user     = var.user
     type     = "ssh"
     private_key = file(var.ssh_priv)
     host    = var.bastion_fqdn
