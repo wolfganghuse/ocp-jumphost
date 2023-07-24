@@ -38,6 +38,11 @@ variable "basedomain" {
   type = string
 }
 
+variable "user" {
+  type = string
+}
+
+
 variable "zone" {
   type = string
 }
@@ -89,3 +94,8 @@ variable "cloudflare_api_token" {
 variable "pullsecret" {
   type = string
 }
+
+variable "account_key_pem" {
+  type = string
+}
+

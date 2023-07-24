@@ -5,29 +5,39 @@ module "openshift-cluster" {
     nutanix = nutanix.AZ01
   }
 
+    depends_on = [
+    nutanix_virtual_machine.installer
+  ]
+
+
   PC_USER           = var.PC_USER
   PC_PASS           = var.PC_PASS
-  PC_ENDPOINT       = format("pc-%s.%s",var.OCP_SUBDOMAIN,var.OCP_BASEDOMAIN)
+  PC_ENDPOINT       = local.pc_fqdn
   
   ssh_priv          = var.JUMPHOST_PRIVATE_SSH
   ssh_pub           = var.JUMPHOST_PUBLIC_SSH
-  bastion_fqdn      = format("%s.%s.%s",var.bastion_name,var.ZONE,var.BASE_DOMAIN)
-  basedomain        = var.BASE_DOMAIN
+  user              = "ubuntu"
+  bastion_fqdn      = local.bastion_fqdn
+  basedomain        = var.OCP_BASEDOMAIN
+  mirror            = var.USE_MIRROR
   mirror_repo       = var.MIRROR_REPO
   mirror_host       = var.MIRROR_HOST
   zone              = var.ZONE 
-  subnet            = "AZ01MGMT01VLAN40"
-  cluster           = "AZ01MGMT01"
-  api_vip           = "10.44.140.8"
-  ingress_vip       = "10.44.140.9"
-  subdomain         = "az01ocp-hub"
-  container         = "ocp"
+  subnet            = var.nutanix_subnet
+  cluster           = var.nutanix_cluster
+  api_vip           = var.OCP_API_VIP
+  ingress_vip       = var.OCP_INGRESS_VIP
+  
+  subdomain         = var.OCP_SUBDOMAIN
+  container         = var.CONTAINER
   peuser            = "admin"
   pepass            = "Nutanix.123"
   controlplane_size = "small"
   cluster_role      = "hub"
-  mirror            = false
+  
   pullsecret        = var.pullsecret
 
   cloudflare_api_token = var.cloudflare_api_token
+
+  account_key_pem = var.account_key_pem
 }

@@ -13,6 +13,7 @@ module "cert_ocp" {
   
 
   common_name = local.ocpbasedomain
+  account_key_pem = var.account_key_pem
   subject_alternative_names = [
     format("api.%s", local.ocpbasedomain),
     format("*.apps.%s", local.ocpbasedomain)
@@ -50,7 +51,7 @@ resource "null_resource" "installer" {
 
   # generic remote provisioners (i.e. file/remote-exec)
   connection {
-    user     = "rhel"  
+    user     = var.user  
     type     = "ssh"
     private_key = file(var.ssh_priv)
     host    = var.bastion_fqdn

@@ -5,7 +5,7 @@ terraform{
     }
     acme = {
       source  = "vancluever/acme"
-      version = "= 2.10"
+      version = "~> 2.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"

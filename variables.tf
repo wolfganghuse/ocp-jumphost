@@ -84,6 +84,30 @@ variable "JUMPHOST_IMAGE" {
   type = string
 }
 
+variable "USE_MIRROR" {
+  type = bool
+}
+
+variable "MIRROR_REPO" {
+  type = string
+}
+
+variable "MIRROR_HOST" {
+  type = string
+}
 variable "installer_name" {
   type = string
 }
+
+variable "pullsecret" {
+  type = string
+}
+
+variable "ZONE" {
+  type = string
+}
+
+variable "account_key_pem" {
+  type = string
+}
+

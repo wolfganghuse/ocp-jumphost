@@ -1,21 +1,28 @@
 data "nutanix_subnet" "net" {
+
+  provider = nutanix.AZ01
+
   subnet_name = var.nutanix_subnet
 }
 
 data "nutanix_subnet" "jumphost_net" {
+
+  provider = nutanix.AZ01
+
   subnet_name = var.jumphost_nutanix_subnet
 }
 
 data "nutanix_cluster" "cluster" {
+
+  provider = nutanix.AZ01
+
   name = var.nutanix_cluster
 }
 
-resource "nutanix_image" "source_image" {
-  source_uri = var.JUMPHOST_IMAGE
-  name = "ubuntu-22.10"
-}
-
 resource "nutanix_virtual_machine" "installer" {
+
+  provider = nutanix.AZ01
+
   name                 = var.installer_name
   num_vcpus_per_socket = 4
   num_sockets          = 1
@@ -31,7 +38,8 @@ resource "nutanix_virtual_machine" "installer" {
     disk_size_mib   = 50000
     data_source_reference = {
         kind = "image"
-        uuid = resource.nutanix_image.source_image.id
+        uuid = data.nutanix_image.source_image.id
+        //uuid = resource.nutanix_image.source_image.id
       }
   
     device_properties {
@@ -44,11 +52,12 @@ resource "nutanix_virtual_machine" "installer" {
     }
   }
 
+
   guest_customization_cloud_init_user_data = base64encode(templatefile("./templates/cloud-config.tftpl", {
     machine_name = var.installer_name
     ssh_key = file(var.JUMPHOST_PUBLIC_SSH)
   }))
-}
+
   connection {
     user     = "ubuntu"  
     type     = "ssh"
@@ -56,7 +65,6 @@ resource "nutanix_virtual_machine" "installer" {
     host    = nutanix_virtual_machine.installer.nic_list_status[0].ip_endpoint_list[0].ip
     //host    = "10.48.38.98"
   }
-
 
   provisioner "file" {
     content      = acme_certificate.bastion.certificate_pem
@@ -86,12 +94,10 @@ resource "nutanix_virtual_machine" "installer" {
     destination = "/home/ubuntu/.ssh/remote"
   }
 
-
   provisioner "remote-exec" {
     inline = [
       "sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/remote",
       "sudo chmod 0600 /home/ubuntu/.ssh/remote"
     ]
   }
-
 }
