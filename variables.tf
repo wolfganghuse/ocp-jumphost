@@ -107,6 +107,14 @@ variable "ZONE" {
   type = string
 }
 
+variable "ocp_ver" {
+  type = string
+}
+
+variable "BETA_CSI" {
+  type = string
+}
+
 variable "account_key_pem" {
   type = string
 }

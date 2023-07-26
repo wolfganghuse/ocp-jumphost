@@ -1,10 +1,10 @@
 locals {
   config_folder = var.subdomain
-  controlplane_cpu = "${var.controlplane_size == "large" ? 16 : 8}"
-  controlplane_mem = "${var.controlplane_size == "large" ? 131072 : 32768}"
-  worker_count = "${var.cluster_role == "hub" ? 6 : 3}"
-  worker_cpu = "${var.cluster_role == "hub" ? 8 : 4}"
-  worker_mem = "${var.cluster_role == "hub" ? 32768 : 16384}"
+  controlplane_cpu = "${var.controlplane_size == "large" ? 8 : 4}"
+  controlplane_mem = "${var.controlplane_size == "large" ? 32768 : 16384}"
+  worker_count = "${var.cluster_role == "hub" ? 3 : 2}"
+  worker_cpu = "${var.cluster_role == "hub" ? 8 : 2}"
+  worker_mem = "${var.cluster_role == "hub" ? 16384 : 8192}"
   ocpbasedomain = format("%s.%s.%s", var.subdomain, var.zone,var.basedomain)
 }
 
@@ -77,7 +77,7 @@ resource "null_resource" "installer" {
     content      = module.cert_ocp.private_key_pem
     destination = format("./%s/%s.key", local.config_folder, var.subdomain)
   }
-    provisioner "file" {
+  provisioner "file" {
     content      = module.cert_ocp.issuer_pem
     destination = format("./%s/ca.crt", local.config_folder)
   }
@@ -158,7 +158,10 @@ resource "null_resource" "installer" {
   
   provisioner "file" {
     content    = templatefile("${path.module}/templates/create_ocp.tftpl", {
-    additionalComands = "${var.cluster_role == "hub" ? "" : "sh infranodes.sh"}"
+    additionalCommands = "${var.cluster_role == "hub" ? "" : "sh infranodes.sh"}"
+    mirrorCommands = "${var.mirror ? "sh disconnect.sh" : ""}"
+    csi-operator = "${var.mirror ? "csi-operator-disconnected" : var.BETA_CSI ? "csi-operator-beta" : "csi-operator"}"
+    
     })
     destination = format("./%s/create_ocp.sh", local.config_folder)
   }
@@ -167,6 +170,7 @@ resource "null_resource" "installer" {
 resource "null_resource" "bastion_disconnected" {
   count = var.mirror ? 1 : 0
 
+  depends_on = [ null_resource.installer ]
   
   connection {
     user     = var.user
@@ -176,19 +180,12 @@ resource "null_resource" "bastion_disconnected" {
   }
   
   provisioner "file" {
-    content    = templatefile("${path.module}/templates/imageContentSourcePolicy.tftpl", {
+    content    = templatefile("${path.module}/templates/disconnected.tftpl", {
     mirror = var.mirror_host
     mirror_repo = var.mirror_repo
+    ocp_ver = var.ocp_ver
     })
-    destination = format("./%s/imageContentSourcePolicy.yaml", local.config_folder)
-  }
-
-  provisioner "file" {
-    content    = templatefile("${path.module}/templates/patchImageRegistry.tftpl", {
-    mirror = var.mirror_host
-    mirror_repo = var.mirror_repo
-    })
-    destination = format("./%s/patchImageRegistry.sh", local.config_folder)
+    destination = format("./%s/disconnected.sh", local.config_folder)
   }
 
 }

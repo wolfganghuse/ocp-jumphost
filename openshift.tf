@@ -33,8 +33,10 @@ module "openshift-cluster" {
   peuser            = "admin"
   pepass            = "Nutanix.123"
   controlplane_size = "small"
-  cluster_role      = "hub"
-  
+  cluster_role      = "workload"
+  ocp_ver           = var.ocp_ver
+
+  BETA_CSI          = var.BETA_CSI
   pullsecret        = var.pullsecret
 
   cloudflare_api_token = var.cloudflare_api_token

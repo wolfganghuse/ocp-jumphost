@@ -4,8 +4,10 @@ cp openshift-cloud-controller-manager-nutanix-credentials-credentials.yaml manif
 cp mco* manifests
 openshift-install create ignition-configs
 openshift-install create cluster
+${additionalCommands}
+${mirrorCommands}
 sh certs.sh
+sh ${csi-operator}.sh
 sh csi.sh
 sh imageregistry.sh
 sh logging.sh
-${additionalComands}

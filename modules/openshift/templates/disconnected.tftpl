@@ -1,4 +1,4 @@
----
+cat <<EOF | oc --kubeconfig=auth/kubeconfig apply -f -
 apiVersion: operator.openshift.io/v1alpha1
 kind: ImageContentSourcePolicy
 metadata:
@@ -8,38 +8,20 @@ metadata:
 spec:
   repositoryDigestMirrors:
   - mirrors:
+    - ${mirror}/${mirror_repo}/ntnx-csi
+    source: quay.io/ntnx-csi
+  - mirrors:
     - ${mirror}/${mirror_repo}/nutanix
     source: registry.connect.redhat.com/nutanix
   - mirrors:
-    - ${mirror}/${mirror_repo}/openshift-logging
-    source: registry.redhat.io/openshift-logging
-  - mirrors:
     - ${mirror}/${mirror_repo}/redhat
     source: registry.redhat.io/redhat
-  - mirrors:
-    - ${mirror}/${mirror_repo}/quay
-    source: registry.redhat.io/quay
-  - mirrors:
-    - ${mirror}/${mirror_repo}/rhel8
-    source: registry.redhat.io/rhel8
-  - mirrors:
-    - ${mirror}/${mirror_repo}/oadp
-    source: registry.redhat.io/oadp
-  - mirrors:
-    - ${mirror}/${mirror_repo}/f5networks
-    source: registry.connect.redhat.com/f5networks
   - mirrors:
     - ${mirror}/${mirror_repo}/sig-storage
     source: k8s.gcr.io/sig-storage
   - mirrors:
     - ${mirror}/${mirror_repo}/openshift4
     source: registry.redhat.io/openshift4
-  - mirrors:
-    - ${mirror}/${mirror_repo}/rhacm2
-    source: registry.redhat.io/rhacm2
-  - mirrors:
-    - ${mirror}/${mirror_repo}/ubi7
-    source: registry.redhat.io/ubi7
 ---
 apiVersion: operator.openshift.io/v1alpha1
 kind: ImageContentSourcePolicy
@@ -60,7 +42,7 @@ metadata:
   name: certified-operator-index
   namespace: openshift-marketplace
 spec:
-  image: ${mirror}/${mirror_repo}/redhat/certified-operator-index:v4.12
+  image: ${mirror}/${mirror_repo}/redhat/certified-operator-index:v${ocp_ver}
   sourceType: grpc
   updateStrategy:
     registryPoll:
@@ -72,8 +54,35 @@ metadata:
   name: redhat-operator-index
   namespace: openshift-marketplace
 spec:
-  image: ${mirror}/${mirror_repo}/redhat/redhat-operator-index:v4.12
+  image: ${mirror}/${mirror_repo}/redhat/redhat-operator-index:v${ocp_ver}
   sourceType: grpc
   updateStrategy:
     registryPoll:
       interval: 45m
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: nutanix-csi-operator-catalog
+  namespace: openshift-marketplace
+spec:
+  image: ${mirror}/${mirror_repo}/ntnx-csi/nutanix-csi-operator-catalog:latest
+  sourceType: grpc
+  updateStrategy:
+    registryPoll:
+      interval: 45m
+EOF
+
+oc --kubeconfig=auth/kubeconfig patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
+oc --kubeconfig=auth/kubeconfig patch image.config cluster --type=merge  --patch-file=/dev/stdin <<-EOF
+{
+  "spec":{
+    "registrySources":{
+      "containerRuntimeSearchRegistries":["${mirror}"],
+      "allowedRegistries":["${mirror}","quay.io/openshift-release-dev","registry.redhat.io","registry.connect.redhat.com","k8s.gcr.io/sig-storage"]
+    }
+  }
+}
+EOF
+
+oc --kubeconfig=auth/kubeconfig patch configs.samples.operator.openshift.io/cluster --patch '{"spec":{"samplesRegistry": "${mirror}" }}' --type=merge
