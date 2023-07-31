@@ -7,21 +7,6 @@ resource "acme_registration" "reg" {
   email_address   = "wolfgang.huse@nutanix.com"
 }
 
-resource "acme_certificate" "prismcentral" {
-  account_key_pem           = acme_registration.reg.account_key_pem
-  common_name               = format("%s.%s", var.OCP_SUBDOMAIN,var.OCP_BASEDOMAIN)
-  subject_alternative_names = [
-    local.pc_fqdn
-  ]
-
-  dns_challenge {
-    provider = "cloudflare"
-    config = {
-      CF_DNS_API_TOKEN     = var.cloudflare_api_token
-    }
-  }
-}
-
 resource "acme_certificate" "bastion" {
   account_key_pem           = acme_registration.reg.account_key_pem
   common_name               = local.bastion_fqdn

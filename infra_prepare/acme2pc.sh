@@ -32,9 +32,9 @@ curl --user $USERNAME:$PASSWORD \
 --silent \
 --show-error \
 --fail \
--F caChain=@$SCRIPT_DIR/certs/ca-$TF_VAR_OCP_SUBDOMAIN.crt \
--F cert=@$SCRIPT_DIR/certs/$TF_VAR_OCP_SUBDOMAIN.crt \
--F key=@$SCRIPT_DIR/certs/$TF_VAR_OCP_SUBDOMAIN.key \
+-F caChain=@$SCRIPT_DIR/certs/$TF_VAR_ZONE-ca.crt \
+-F cert=@$SCRIPT_DIR/certs/$TF_VAR_ZONE.crt \
+-F key=@$SCRIPT_DIR/certs/$TF_VAR_ZONE.key \
 -F keyType=RSA_2048 \
 -k https://$PRISM_CENTRAL:9440/PrismGateway/services/rest/v1/keys/pem/import
 
