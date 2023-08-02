@@ -112,6 +112,7 @@ variable "ocp_ver" {
 }
 
 variable "CSI_BETA" {
+
   type = string
 }
 

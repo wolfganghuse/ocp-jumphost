@@ -37,6 +37,7 @@ module "openshift-cluster" {
   ocp_ver           = var.ocp_ver
 
   CSI_BETA          = var.CSI_BETA
+
   pullsecret        = var.pullsecret
 
   cloudflare_api_token = var.cloudflare_api_token

@@ -102,6 +102,7 @@ resource "nutanix_virtual_machine" "installer" {
     })
     destination = ".env"
   }
+
   provisioner "remote-exec" {
     inline = ["sh bastion.sh"]
   }
