@@ -139,16 +139,6 @@ resource "null_resource" "installer" {
   }
 
   provisioner "file" {
-    content    = templatefile("${path.module}/templates/csi.tftpl", {
-    user = var.peuser
-    password = var.pepass
-    endpoint = data.nutanix_cluster.cluster.external_ip
-    container = var.container
-    })
-    destination = format("./%s/csi.sh", local.config_folder)
-  }
-
-  provisioner "file" {
     content    = templatefile("${path.module}/templates/certs.tftpl", {
     ocp_subdomain = var.subdomain
     mirror = var.mirror_host
@@ -160,8 +150,6 @@ resource "null_resource" "installer" {
     content    = templatefile("${path.module}/templates/create_ocp.tftpl", {
     additionalCommands = "${var.cluster_role == "hub" ? "" : "sh infranodes.sh"}"
     mirrorCommands = "${var.mirror ? "sh disconnect.sh" : ""}"
-    csi-operator = "${var.mirror ? "csi-operator-disconnected" : var.BETA_CSI ? "csi-operator-beta" : "csi-operator"}"
-    
     })
     destination = format("./%s/create_ocp.sh", local.config_folder)
   }

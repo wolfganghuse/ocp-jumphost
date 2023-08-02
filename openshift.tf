@@ -36,7 +36,8 @@ module "openshift-cluster" {
   cluster_role      = "workload"
   ocp_ver           = var.ocp_ver
 
-  BETA_CSI          = var.BETA_CSI
+  CSI_BETA          = var.CSI_BETA
+
   pullsecret        = var.pullsecret
 
   cloudflare_api_token = var.cloudflare_api_token

@@ -111,7 +111,8 @@ variable "ocp_ver" {
   type = string
 }
 
-variable "BETA_CSI" {
+variable "CSI_BETA" {
+
   type = string
 }
 
