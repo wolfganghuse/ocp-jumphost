@@ -1,0 +1,48 @@
+cat <<EOF | oc --kubeconfig=auth/kubeconfig create -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ntnx-secret
+  namespace: openshift-cluster-csi-drivers
+stringData:
+  key: ${endpoint}:9440:${user}:${password}
+EOF
+
+
+cat <<EOF | oc --kubeconfig=auth/kubeconfig create -f -
+apiVersion: crd.nutanix.com/v1alpha1
+kind: NutanixCsiStorage
+metadata:
+  name: nutanixcsistorage
+  namespace: openshift-cluster-csi-drivers
+spec:
+  namespace: openshift-cluster-csi-drivers
+EOF
+
+cat <<EOF | oc --kubeconfig=auth/kubeconfig create -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nutanix-volume
+provisioner: csi.nutanix.com
+parameters:
+  csi.storage.k8s.io/provisioner-secret-name: ntnx-secret
+  csi.storage.k8s.io/provisioner-secret-namespace: openshift-cluster-csi-drivers
+  csi.storage.k8s.io/node-publish-secret-name: ntnx-secret
+  csi.storage.k8s.io/node-publish-secret-namespace: openshift-cluster-csi-drivers
+  csi.storage.k8s.io/controller-expand-secret-name: ntnx-secret
+  csi.storage.k8s.io/controller-expand-secret-namespace: openshift-cluster-csi-drivers
+  csi.storage.k8s.io/fstype: ext4
+  storageContainer: ${container}
+  storageType: NutanixVolumes
+  #whitelistIPMode: ENABLED
+  #chapAuth: ENABLED
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+EOF
+
+oc --kubeconfig=auth/kubeconfig patch storageclass nutanix-volume -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+
+
+

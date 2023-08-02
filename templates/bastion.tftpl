@@ -1,0 +1,32 @@
+sudo cp ~/ipi/ca.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+
+sudo apt-get update
+
+sudo apt-get install python3.8-venv gcc make jq apt-transport-https mkisofs podman unzip --yes
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+
+curl -sLS https://get.arkade.dev | sudo sh
+
+echo "export PATH=$PATH:$HOME/.arkade/bin/" ~/.bashrc
+
+arkade get kubectl helm istioctl packer k9s clusterctl croc
+
+wget ${ocp_basedir}oc-mirror.tar.gz
+wget ${ocp_basedir}openshift-client-linux.tar.gz
+wget ${ocp_basedir}openshift-install-linux.tar.gz
+
+tar xvzf openshift-client-linux.tar.gz
+tar xvzf openshift-install-linux.tar.gz
+tar xvzf oc-mirror.tar.gz
+chmod +x oc-mirror
+
+sudo install oc /usr/local/bin
+sudo install oc-mirror /usr/local/bin
+sudo install openshift-install /usr/local/bin
+
+git clone https://github.com/wolfganghuse/multicluster-devsecops.git
+git clone https://github.com/wolfganghuse/e2e-benchmarking.git
+git clone https://github.com/wolfganghuse/multicloud-gitops-nutanix.git
