@@ -102,6 +102,6 @@ variable "account_key_pem" {
   type = string
 }
 
-variable "BETA_CSI" {
+variable "CSI_BETA" {
   type = string
 }

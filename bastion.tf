@@ -86,6 +86,22 @@ resource "nutanix_virtual_machine" "installer" {
     })
     destination = "bastion.sh"
   }
+
+  provisioner "file" {
+    content      = templatefile("./templates/.env.tftpl", {
+    PE_HOST=data.nutanix_cluster.cluster.external_ip
+    PE_PORT="9440"
+    PE_PASSWORD=var.PE_PASS
+    PE_USERNAME=var.PE_USER
+    NUTANIX_PASSWORD=var.PC_PASS
+    NUTANIX_USERNAME=var.PC_USER
+    NUTANIX_ENDPOINT=var.PC_ENDPOINT
+    NUTANIX_SUBNET=var.nutanix_subnet
+    NUTANIX_CLUSTER=var.nutanix_cluster
+    CSI_BETA=var.CSI_BETA
+    })
+    destination = ".env"
+  }
   provisioner "remote-exec" {
     inline = ["sh bastion.sh"]
   }

@@ -7,7 +7,6 @@ openshift-install create cluster
 ${additionalCommands}
 ${mirrorCommands}
 sh certs.sh
-sh ${csi-operator}.sh
 sh csi.sh
 sh imageregistry.sh
 sh logging.sh

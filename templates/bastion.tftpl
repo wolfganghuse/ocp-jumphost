@@ -10,7 +10,8 @@ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
 
 curl -sLS https://get.arkade.dev | sudo sh
 
-echo "export PATH=$PATH:$HOME/.arkade/bin/" ~/.bashrc
+echo "export PATH=$PATH:$HOME/.arkade/bin/" >> ~/.bashrc
+echo "source .env" >> ~/.bashrc
 
 arkade get kubectl helm istioctl packer k9s clusterctl croc
 
