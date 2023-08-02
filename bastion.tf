@@ -10,6 +10,7 @@ data "nutanix_subnet" "jumphost_net" {
   provider = nutanix.AZ01
 
   subnet_name = var.jumphost_nutanix_subnet
+
 }
 
 data "nutanix_cluster" "cluster" {

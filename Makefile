@@ -5,6 +5,15 @@ redeploy:
 	terraform destroy -target=module.openshift-cluster.null_resource.installer -target=module.openshift-cluster.null_resource.bastion_disconnected[0] -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
 	terraform apply -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
 
+vm:
+	
+	terraform apply -target=nutanix_virtual_machine.installer -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
+	terraform apply -target=cloudflare_record.bastion -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
+
+
+prepare_infra:
+	terraform -chdir=infra_prepare apply -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
+
 clean_vm:
 	terraform destroy -target=nutanix_virtual_machine.installer -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
 
