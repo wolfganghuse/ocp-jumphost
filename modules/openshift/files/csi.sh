@@ -1,6 +1,6 @@
 
 # Create Operator Group
-cat <<EOF | oc create -f -
+cat <<EOF | oc  --kubeconfig=auth/kubeconfig create -f -
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
@@ -12,8 +12,8 @@ spec:
   upgradeStrategy: Default
 EOF
 
-if [[ -z "$(oc get packagemanifests | grep nutanix)" || $CSI_BETA == "true" ]]; then  echo "Can't find CSI operator version that meet the OCP version"
-  cat <<EOF | oc apply -f -
+if [[ -z "$(oc  --kubeconfig=auth/kubeconfig get packagemanifests | grep nutanix)" || $CSI_BETA == "true" ]]; then  echo "Can't find CSI operator version that meet the OCP version"
+  cat <<EOF | oc  --kubeconfig=auth/kubeconfig apply -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
@@ -34,7 +34,7 @@ EOF
     current_time=$(date +%s)
     elapsed_time=$((current_time - start_time))
 
-    if [[ $(oc get catalogsource nutanix-csi-operator-beta -n openshift-marketplace -o 'jsonpath={..status.connectionState.lastObservedState}') == "READY" ]]; then
+    if [[ $(oc  --kubeconfig=auth/kubeconfig get catalogsource nutanix-csi-operator-beta -n openshift-marketplace -o 'jsonpath={..status.connectionState.lastObservedState}') == "READY" ]]; then
       echo "CatalogSource is now READY."
       break
     fi
@@ -49,11 +49,11 @@ EOF
   done
 fi
 
-starting_csv=$(oc get packagemanifests nutanixcsioperator -o jsonpath=\{.status.channels[*].currentCSV\})
-source=$(oc get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSource\})
-source_namespace=$(oc get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSourceNamespace\})
+starting_csv=$(oc  --kubeconfig=auth/kubeconfig get packagemanifests nutanixcsioperator -o jsonpath=\{.status.channels[*].currentCSV\})
+source=$(oc  --kubeconfig=auth/kubeconfig get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSource\})
+source_namespace=$(oc  --kubeconfig=auth/kubeconfig get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSourceNamespace\})
 
-cat <<EOF | oc apply -f -
+cat <<EOF | oc  --kubeconfig=auth/kubeconfig apply -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
@@ -73,7 +73,7 @@ while true; do
   current_time=$(date +%s)
   elapsed_time=$((current_time - start_time))
 
-  if [[ $(oc get subscription nutanixcsioperator -n openshift-cluster-csi-drivers -o 'jsonpath={..status.state}') == "AtLatestKnown" ]]; then
+  if [[ $(oc  --kubeconfig=auth/kubeconfig get subscription nutanixcsioperator -n openshift-cluster-csi-drivers -o 'jsonpath={..status.state}') == "AtLatestKnown" ]]; then
     echo "Subscription is now ready."
     break
   fi
@@ -88,7 +88,7 @@ while true; do
 done
 
 # Create a NutanixCsiStorage resource to deploy your driver
-cat <<EOF | oc create -f -
+cat <<EOF | oc  --kubeconfig=auth/kubeconfig create -f -
 apiVersion: crd.nutanix.com/v1alpha1
 kind: NutanixCsiStorage
 metadata:
@@ -97,7 +97,7 @@ metadata:
 spec: {}
 EOF
 
-cat <<EOF | oc create -f -
+cat <<EOF | oc  --kubeconfig=auth/kubeconfig create -f -
 apiVersion: v1
 kind: Secret
 metadata:
@@ -110,7 +110,7 @@ EOF
 
 NUTANIX_STORAGE_CONTAINER=SelfServiceContainer
 
-cat <<EOF | oc create -f -
+cat <<EOF | oc  --kubeconfig=auth/kubeconfig create -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
