@@ -10,6 +10,6 @@
 data "nutanix_image" "source_image" {
 
   provider = nutanix.AZ01
-  image_name = var.JUMPHOST_IMAGE
+  image_name = var.JUMPHOST_IMAGE_NAME
 
 }

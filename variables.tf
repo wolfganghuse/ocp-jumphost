@@ -84,6 +84,11 @@ variable "JUMPHOST_IMAGE" {
   type = string
 }
 
+variable "JUMPHOST_IMAGE_NAME" {
+  type = string
+}
+
+
 variable "USE_MIRROR" {
   type = bool
 }
