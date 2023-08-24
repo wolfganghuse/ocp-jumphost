@@ -40,6 +40,13 @@ resource "cloudflare_record" "API" {
   type    = "A"
 }
 
+resource "cloudflare_record" "API-int" {
+  zone_id = data.cloudflare_zone.this.id
+  name    = format("api-int.%s.%s", var.subdomain, var.zone)
+  value   = var.api_vip
+  type    = "A"
+}
+
 resource "cloudflare_record" "INGRESS" {
   zone_id = data.cloudflare_zone.this.id
   name    = format("*.apps.%s.%s", var.subdomain, var.zone)
