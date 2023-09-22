@@ -6,6 +6,7 @@ locals {
   worker_cpu = "${var.cluster_role == "hub" ? 8 : 2}"
   worker_mem = "${var.cluster_role == "hub" ? 16384 : 8192}"
   ocpbasedomain = format("%s.%s.%s", var.subdomain, var.zone,var.basedomain)
+  pc = "${var.PC_ENDPOINT_EXISTING_FQDN == "" ? var.PC_ENDPOINT : var.PC_ENDPOINT_EXISTING_FQDN}"
 }
 
 module "cert_ocp" {
@@ -116,7 +117,7 @@ resource "null_resource" "installer" {
     name = var.subdomain
     apivip = var.api_vip
     ingressvip = var.ingress_vip
-    address = var.PC_ENDPOINT
+    address = local.pc
     peip = data.nutanix_cluster.cluster.external_ip
     peuuid = data.nutanix_cluster.cluster.id
     subnetuuid = data.nutanix_subnet.net.id

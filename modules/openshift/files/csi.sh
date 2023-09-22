@@ -1,4 +1,4 @@
-
+resource_timeout_seconds=180
 # Create Operator Group
 cat <<EOF | oc  --kubeconfig=auth/kubeconfig create -f -
 apiVersion: operators.coreos.com/v1

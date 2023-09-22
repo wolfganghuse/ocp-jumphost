@@ -10,6 +10,11 @@ variable "PC_ENDPOINT" {
   type = string
 }
 
+variable "PC_ENDPOINT_EXISTING_FQDN" {
+  type = string
+}
+
+
 variable "subnet" {
   type = string
 }

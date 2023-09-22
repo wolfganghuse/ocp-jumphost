@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  collections:
+    - nutanix.ncp
+  vars:
+    role_name: "Cloud Native Role"
+  tasks:
+    - name: Create Cloud Native role
+      ntnx_roles:
+        state: present
+        name: "{{ role_name }}"
+        permissions:
+          - name: "Create_Category_Mapping"
+          - name: "Create_Image"
+          - name: "Create_Or_Update_Name_Category"
+          - name: "Create_Or_Update_Value_Category"
+          - name: "Create_Virtual_Machine"
+          - name: "Delete_Category_Mapping"
+          - name: "Delete_Image"
+          - name: "Delete_Name_Category"
+          - name: "Delete_Value_Category"
+          - name: "Delete_Virtual_Machine"
+          - name: "View_Category_Mapping"
+          - name: "View_Cluster"
+          - name: "View_Image"
+          - name: "View_Name_Category"
+          - name: "View_Project"
+          - name: "View_Subnet"
+          - name: "View_Value_Category"
+          - name: "View_Virtual_Machine"
+        wait: true

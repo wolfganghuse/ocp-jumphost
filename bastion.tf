@@ -119,3 +119,9 @@ resource "nutanix_virtual_machine" "installer" {
     ]
   }
 }
+
+data "nutanix_virtual_machine" "bastion_host" {
+ provider = nutanix.AZ01
+  
+ vm_id = nutanix_virtual_machine.installer.id
+}

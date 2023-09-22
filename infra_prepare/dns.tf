@@ -8,3 +8,4 @@ resource "cloudflare_record" "PC" {
   value   = var.PC_ENDPOINT
   type    = "A"
 }
+

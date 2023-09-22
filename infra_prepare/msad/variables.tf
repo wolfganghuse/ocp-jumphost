@@ -14,6 +14,10 @@ variable "PE_PASS" {
   type = string
 }
 
+variable "msad_ip" {
+  type = string
+}
+
 variable "jumphost_nutanix_subnet" {
   type = string
 }
@@ -68,9 +72,6 @@ variable "PC_ENDPOINT" {
   type = string
 }
 
-variable "PC_ENDPOINT_EXISTING_FQDN" {
-  type = string
-}
 variable "CONTAINER" {
   type = string
 }
@@ -128,6 +129,3 @@ variable "account_key_pem" {
   type = string
 }
 
-variable "cluster_role" {
-  type = string
-}

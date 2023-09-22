@@ -1,0 +1,12 @@
+[win]
+10.50.73.11
+
+[win:vars]
+ansible_user=administrator
+ansible_password=Nutanix.123
+ansible_shell_type=powershell
+ansible_shell_executable=None
+ansible_connection=winrm
+ansible_port=5985
+ansible_winrm_server_cert_validation=ignore
+ansible_winrm_transport=ntlm

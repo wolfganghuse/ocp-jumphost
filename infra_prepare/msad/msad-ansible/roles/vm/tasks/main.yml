@@ -1,0 +1,5 @@
+---
+- name: Inputs for vm task
+  include_tasks: vm.yml
+  with_items:
+    - {name: "MSAD", desc: "OCP NVD Microsoft AD", is_connected: True, subnet_name: "{{MGMTLAN.name}}", image_name: "win2019", private_ip: ""}

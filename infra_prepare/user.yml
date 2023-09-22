@@ -1,0 +1,17 @@
+---
+- name: users playbook
+  hosts: localhost
+  collections:
+    - nutanix.ncp
+  tasks:
+  - name: Setting Variables
+    set_fact:
+        directory_service_uuid: ""
+        principal_name: "ocpinfra"
+        project:
+          uuid: ""
+
+  - name: create local user
+    ntnx_users:
+      username: "{{principal_name}}"
+    register: result
