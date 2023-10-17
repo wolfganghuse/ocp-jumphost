@@ -4,9 +4,9 @@ curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share
 
 sudo apt-get update
 
-sudo apt-get install python3.8-venv gcc make jq apt-transport-https mkisofs podman unzip --yes
+sudo apt-get install python3.10-venv gcc make jq apt-transport-https mkisofs podman unzip --yes
 
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
 
 curl -sLS https://get.arkade.dev | sudo sh
 

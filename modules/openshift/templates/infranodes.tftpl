@@ -1,4 +1,4 @@
-oc --kubeconfig=auth/kubeconfig get $(oc --kubeconfig=auth/kubeconfig get machineset -A --output=name) -n openshift-machine-api -o json | sed 's/-worker/-infra/g' | sed 's/16Gi/${mem}Gi/g' | sed 's/: 4/: ${cpu}/g' | jq '.spec.template.spec +={"metadata":{"labels":{"node-role.kubernetes.io/infra":""}},"taints":[{"effect":"NoSchedule","key":"node-role.kubernetes.io/infra"}]}' | oc --kubeconfig=auth/kubeconfig create -f -
+oc --kubeconfig=auth/kubeconfig get $(oc --kubeconfig=auth/kubeconfig get machineset -A --output=name) -n openshift-machine-api -o json | sed 's/-worker/-infra/g' | jq '.spec.template.spec +={"metadata":{"labels":{"node-role.kubernetes.io/infra":""}},"taints":[{"effect":"NoSchedule","key":"node-role.kubernetes.io/infra"}]}' | oc --kubeconfig=auth/kubeconfig create -f -
 oc --kubeconfig=auth/kubeconfig patch ingresscontroller default -n openshift-ingress-operator  --type merge --patch '{"spec":{"nodePlacement":{"nodeSelector":{"matchLabels":{"node-role.kubernetes.io/infra":""}},"tolerations":[{"effect":"NoSchedule","operator":"Exists"}]}}}'
 
 
