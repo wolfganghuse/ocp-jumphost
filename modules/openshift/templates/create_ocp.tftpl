@@ -4,6 +4,15 @@ cp openshift-cloud-controller-manager-nutanix-credentials-credentials.yaml manif
 cp mco* manifests
 openshift-install create ignition-configs
 openshift-install create cluster
+return_code=$?
+# Check if return code is different than 0
+if [ $return_code -ne 0 ]; then
+    echo "There was an error running openshift-install. Return code: $return_code"
+    exit 1
+else
+    echo "Cluster successfully installed"
+fi
+echo "Running Day-2 actions"
 ${additionalCommands}
 ${mirrorCommands}
 sh certs.sh

@@ -161,6 +161,11 @@ resource "null_resource" "installer" {
     })
     destination = format("./%s/create_ocp.sh", local.config_folder)
   }
+  provisioner "remote-exec" {
+    inline = [
+      format("chmod +x ./%s/*.sh", local.config_folder)
+    ]
+
 }
 
 resource "null_resource" "bastion_disconnected" {
