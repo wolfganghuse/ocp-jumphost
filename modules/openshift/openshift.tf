@@ -165,6 +165,7 @@ resource "null_resource" "installer" {
     inline = [
       format("chmod +x ./%s/*.sh", local.config_folder)
     ]
+  }
 
 }
 

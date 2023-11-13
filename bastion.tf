@@ -98,7 +98,7 @@ resource "nutanix_virtual_machine" "installer" {
     NUTANIX_ENDPOINT=var.PC_ENDPOINT
     NUTANIX_SUBNET=var.nutanix_subnet
     NUTANIX_CLUSTER=var.nutanix_cluster
-    CSI_BETA=var.CSI_BETA
+    CSI_BETA=var.BETA_CSI
     })
     destination = ".env"
   }

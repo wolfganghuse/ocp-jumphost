@@ -37,7 +37,7 @@ module "openshift-cluster" {
   cluster_role      = var.cluster_role
   ocp_ver           = var.ocp_ver
 
-  CSI_BETA          = var.CSI_BETA
+  CSI_BETA          = var.BETA_CSI
 
   pullsecret        = var.pullsecret
 
