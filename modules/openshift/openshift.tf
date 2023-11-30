@@ -157,6 +157,7 @@ resource "null_resource" "installer" {
   provisioner "file" {
     content    = templatefile("${path.module}/templates/create_ocp.tftpl", {
     additionalCommands = "${var.cluster_role == "hub" ? "" : "sh infranodes.sh"}"
+    hybridnetwork = "${var.cluster_role == "windows" ? "cp cluster-network-03-config.yaml manifests" : ""}"
     mirrorCommands = "${var.mirror ? "sh disconnect.sh" : ""}"
     })
     destination = format("./%s/create_ocp.sh", local.config_folder)
