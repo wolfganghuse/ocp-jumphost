@@ -41,7 +41,5 @@ module "openshift-cluster" {
 
   pullsecret        = var.pullsecret
 
-  cloudflare_api_token = var.cloudflare_api_token
-
   account_key_pem = var.account_key_pem
 }

@@ -19,7 +19,6 @@ module "cert_ocp" {
     format("api.%s", local.ocpbasedomain),
     format("*.apps.%s", local.ocpbasedomain)
   ]
-  cloudflare_api_token = var.cloudflare_api_token
 }
 
 data "nutanix_subnet" "net" {
@@ -30,29 +29,28 @@ data "nutanix_cluster" "cluster" {
   name = var.cluster
 }
 
-data "cloudflare_zone" "this" {
-  name = var.basedomain
-}
-
-resource "cloudflare_record" "API" {
-  zone_id = data.cloudflare_zone.this.id
+resource "aws_route53_record" "API" {
+  zone_id = "Z0807287146Q4KF4CRHAX"
   name    = format("api.%s.%s", var.subdomain, var.zone)
-  value   = var.api_vip
   type    = "A"
+  ttl     = 300
+  records = [var.api_vip]
 }
 
-resource "cloudflare_record" "API-int" {
-  zone_id = data.cloudflare_zone.this.id
+resource "aws_route53_record" "API-int" {
+  zone_id = "Z0807287146Q4KF4CRHAX"
   name    = format("api-int.%s.%s", var.subdomain, var.zone)
-  value   = var.api_vip
   type    = "A"
+  ttl     = 300
+  records = [var.api_vip]
 }
 
-resource "cloudflare_record" "INGRESS" {
-  zone_id = data.cloudflare_zone.this.id
+resource "aws_route53_record" "INGRESS" {
+  zone_id = "Z0807287146Q4KF4CRHAX"
   name    = format("*.apps.%s.%s", var.subdomain, var.zone)
-  value   = var.ingress_vip
   type    = "A"
+  ttl     = 300
+  records = [var.ingress_vip]
 }
 
 resource "null_resource" "installer" {

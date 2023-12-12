@@ -13,14 +13,13 @@ resource "acme_certificate" "prismcentral" {
   subject_alternative_names = [
     format("*.%s.%s", var.ZONE,var.OCP_BASEDOMAIN)
   ]
-
+  
   dns_challenge {
-    provider = "cloudflare"
+    provider = "route53"
     config = {
-      CF_DNS_API_TOKEN     = var.cloudflare_api_token
+      AWS_HOSTED_ZONE_ID = "Z0807287146Q4KF4CRHAX"
     }
   }
-  
 }
 
 resource "local_file" "prismcentral_cert" {

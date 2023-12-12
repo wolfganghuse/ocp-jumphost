@@ -1,6 +1,3 @@
-variable "cloudflare_api_token" {
-  type = string
-}
 
 variable "PC_PASS" {
   type = string

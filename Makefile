@@ -8,7 +8,7 @@ redeploy:
 vm:
 	
 	terraform apply -target=nutanix_virtual_machine.installer -state=state/${TF_VAR_ZONE}-state.tfstate
-	terraform apply -target=cloudflare_record.bastion -state=state/${TF_VAR_ZONE}-state.tfstate
+	terraform apply -target=aws_route53_record.bastion -state=state/${TF_VAR_ZONE}-state.tfstate
 
 
 prepare_infra:
@@ -19,9 +19,9 @@ clean_vm:
 	terraform destroy -target=nutanix_virtual_machine.installer -state=state/${TF_VAR_ZONE}-state.tfstate
 
 network:
-	terraform apply -target=cloudflare_record.{API,INGRESS,PC} -state=state/${TF_VAR_ZONE}-state.tfstate
+	terraform apply -target=aws_route53_record.{API,INGRESS,PC} -state=state/${TF_VAR_ZONE}-state.tfstate
 clean_network:
-	terraform destroy -target=cloudflare_record.{API,INGRESS,PC} -state=state/${TF_VAR_ZONE}-state.tfstate
+	terraform destroy -target=aws_route53_record.{API,INGRESS,PC} -state=state/${TF_VAR_ZONE}-state.tfstate
 clean_zone:
 	terraform destroy -state=state/${TF_VAR_ZONE}-state.tfstate
 	rm state/${TF_VAR_ZONE}-state.tfstate*

@@ -13,9 +13,9 @@ resource "acme_certificate" "certificate" {
   subject_alternative_names = var.subject_alternative_names
 
   dns_challenge {
-    provider = "cloudflare"
+    provider = "route53"
     config = {
-      CF_DNS_API_TOKEN     = var.cloudflare_api_token
+      AWS_HOSTED_ZONE_ID = "Z0807287146Q4KF4CRHAX"
     }
   }
 }
