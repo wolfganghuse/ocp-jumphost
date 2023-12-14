@@ -11,7 +11,8 @@ resource "acme_certificate" "prismcentral" {
   account_key_pem           = acme_registration.reg.account_key_pem
   common_name               = format("%s.%s", var.ZONE,var.OCP_BASEDOMAIN)
   subject_alternative_names = [
-    format("*.%s.%s", var.ZONE,var.OCP_BASEDOMAIN)
+    format("*.%s.%s", var.ZONE,var.OCP_BASEDOMAIN),
+    format("*.objects.%s.%s", var.ZONE,var.OCP_BASEDOMAIN),
   ]
   
   dns_challenge {
