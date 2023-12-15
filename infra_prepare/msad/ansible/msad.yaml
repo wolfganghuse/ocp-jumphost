@@ -5,7 +5,7 @@
     ansible.windows.win_domain:
       create_dns_delegation: no
       database_path: C:\Windows\NTDS
-      dns_domain_name: blaze.dachlab.net
+      dns_domain_name: gptnvd.cloudnative.nvdlab.net
       domain_mode: Win2012R2
       domain_netbios_name: BLAZE
       forest_mode: Win2012R2

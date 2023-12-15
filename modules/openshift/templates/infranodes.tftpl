@@ -2,9 +2,7 @@ oc --kubeconfig=auth/kubeconfig get $(oc --kubeconfig=auth/kubeconfig get machin
 oc --kubeconfig=auth/kubeconfig patch ingresscontroller default -n openshift-ingress-operator  --type merge --patch '{"spec":{"nodePlacement":{"nodeSelector":{"matchLabels":{"node-role.kubernetes.io/infra":""}},"tolerations":[{"effect":"NoSchedule","operator":"Exists"}]}}}'
 
 
-oc --kubeconfig=auth/kubeconfig patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec": {"nodeSelector": {"node-role.kubernetes.io/infra": ""},"affinity": {"podAntiAffinity": {"preferredDuringSchedulingIgnoredDuringExecution": [{"podAffinityTerm": {"namespaces": ["openshift-image-registry"],"topologyKey": "kubernetes.io/hostname"},"weight": 100}]}},"logLevel": "Normal"}}'
-oc --kubeconfig=auth/kubeconfig patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"tolerations":[{"effect":"NoSchedule","key":"node-role.kubernetes.io/infra","operator":"Exists"}]}}'
-
+make
 cat <<EOF | oc --kubeconfig=auth/kubeconfig apply -f -
 apiVersion: v1
 kind: ConfigMap
