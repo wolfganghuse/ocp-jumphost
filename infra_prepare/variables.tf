@@ -66,6 +66,10 @@ variable "PC_ENDPOINT" {
   type = string
 }
 
+variable "OBJECTS_ENDPOINT" {
+  type = string
+}
+
 variable "CONTAINER" {
   type = string
 }

@@ -125,6 +125,10 @@ variable "account_key_pem" {
   type = string
 }
 
+variable "OBJECTS_ENDPOINT" {
+  type = string
+}
+
 variable "cluster_role" {
   type = string
 }

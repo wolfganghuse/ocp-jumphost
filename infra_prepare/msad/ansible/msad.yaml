@@ -7,7 +7,7 @@
       database_path: C:\Windows\NTDS
       dns_domain_name: gptnvd.cloudnative.nvdlab.net
       domain_mode: Win2012R2
-      domain_netbios_name: BLAZE
+      domain_netbios_name: GPTNVD
       forest_mode: Win2012R2
       safe_mode_password: Nutanix.123
       sysvol_path: C:\Windows\SYSVOL
