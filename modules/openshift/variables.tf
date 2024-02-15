@@ -92,10 +92,6 @@ variable "mirror_repo" {
   type = string
 }
 
-variable "cloudflare_api_token" {
-  type = string
-}
-
 variable "pullsecret" {
   type = string
 }
@@ -109,5 +105,9 @@ variable "account_key_pem" {
 
 variable "CSI_BETA" {
 
+  type = string
+}
+
+variable "ZONE_ID" {
   type = string
 }

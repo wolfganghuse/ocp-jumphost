@@ -11,16 +11,16 @@ resource "acme_certificate" "prismcentral" {
   account_key_pem           = acme_registration.reg.account_key_pem
   common_name               = format("%s.%s", var.ZONE,var.OCP_BASEDOMAIN)
   subject_alternative_names = [
-    format("*.%s.%s", var.ZONE,var.OCP_BASEDOMAIN)
+    format("*.%s.%s", var.ZONE,var.OCP_BASEDOMAIN),
+    format("*.objects.%s.%s", var.ZONE,var.OCP_BASEDOMAIN),
   ]
-
+  
   dns_challenge {
-    provider = "cloudflare"
+    provider = "route53"
     config = {
-      CF_DNS_API_TOKEN     = var.cloudflare_api_token
+      AWS_HOSTED_ZONE_ID = var.ZONE_ID
     }
   }
-  
 }
 
 resource "local_file" "prismcentral_cert" {

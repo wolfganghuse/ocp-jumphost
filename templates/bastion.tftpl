@@ -1,9 +1,9 @@
 sudo cp ~/ca.crt /usr/local/share/ca-certificates/
 sudo update-ca-certificates
 
-sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get update
 
-sudo apt-get install python3.11-venv gcc make jq apt-transport-https mkisofs podman unzip --yes
+sudo DEBIAN_FRONTEND=noninteractive apt-get install python3.11-venv gcc make jq apt-transport-https mkisofs podman unzip --yes
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 

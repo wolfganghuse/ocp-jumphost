@@ -22,3 +22,4 @@ files/ca.crt
 files/ps.json
 
 .vscode
+infra_prepare/msad/.infra-env

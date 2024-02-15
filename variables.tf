@@ -1,6 +1,3 @@
-variable "cloudflare_api_token" {
-  type = string
-}
 
 variable "PC_PASS" {
   type = string
@@ -125,6 +122,14 @@ variable "BETA_CSI" {
 }
 
 variable "account_key_pem" {
+  type = string
+}
+
+variable "OBJECTS_ENDPOINT" {
+  type = string
+}
+
+variable "ZONE_ID" {
   type = string
 }
 

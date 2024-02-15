@@ -36,12 +36,10 @@ module "openshift-cluster" {
   controlplane_size = "small"
   cluster_role      = var.cluster_role
   ocp_ver           = var.ocp_ver
-
+  ZONE_ID           = var.ZONE_ID
   CSI_BETA          = var.BETA_CSI
 
   pullsecret        = var.pullsecret
-
-  cloudflare_api_token = var.cloudflare_api_token
 
   account_key_pem = var.account_key_pem
 }

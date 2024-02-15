@@ -11,4 +11,6 @@ variable "account_key_pem" {
   
 }
 
-variable "cloudflare_api_token" {}
+variable "ZONE_ID" {
+  type = string
+}

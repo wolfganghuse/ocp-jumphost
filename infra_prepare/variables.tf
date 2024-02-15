@@ -1,6 +1,4 @@
-variable "cloudflare_api_token" {
-  type = string
-}
+
 
 variable "PC_PASS" {
   type = string
@@ -68,6 +66,10 @@ variable "PC_ENDPOINT" {
   type = string
 }
 
+variable "OBJECTS_ENDPOINT" {
+  type = string
+}
+
 variable "CONTAINER" {
   type = string
 }
@@ -122,3 +124,6 @@ variable "account_key_pem" {
   type = string
 }
 
+variable "ZONE_ID" {
+  type = string
+}
