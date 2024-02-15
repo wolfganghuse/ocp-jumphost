@@ -14,7 +14,6 @@ module "cert_ocp" {
   
   ZONE_ID = var.ZONE_ID
   common_name = local.ocpbasedomain
-  account_key_pem = var.account_key_pem
   subject_alternative_names = [
     format("api.%s", local.ocpbasedomain),
     format("*.apps.%s", local.ocpbasedomain)

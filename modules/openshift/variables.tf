@@ -99,9 +99,6 @@ variable "pullsecret" {
 variable "ocp_ver" {
   type = string
 }
-variable "account_key_pem" {
-  type = string
-}
 
 variable "CSI_BETA" {
 

@@ -40,6 +40,4 @@ module "openshift-cluster" {
   CSI_BETA          = var.BETA_CSI
 
   pullsecret        = var.pullsecret
-
-  account_key_pem = var.account_key_pem
 }

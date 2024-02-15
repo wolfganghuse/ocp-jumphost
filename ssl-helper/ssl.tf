@@ -7,7 +7,6 @@ module "cert" {
   
 
   common_name = local.domain
-  account_key_pem = var.account_key_pem
   subject_alternative_names = [
     format("*.%s", local.domain),
     format("*.objects.%s", local.domain)
