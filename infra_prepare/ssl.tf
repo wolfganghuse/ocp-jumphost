@@ -18,7 +18,7 @@ resource "acme_certificate" "prismcentral" {
   dns_challenge {
     provider = "route53"
     config = {
-      AWS_HOSTED_ZONE_ID = "Z0807287146Q4KF4CRHAX"
+      AWS_HOSTED_ZONE_ID = var.ZONE_ID
     }
   }
 }

@@ -12,7 +12,7 @@ locals {
 module "cert_ocp" {
   source              = "../ssl"
   
-
+  ZONE_ID = var.ZONE_ID
   common_name = local.ocpbasedomain
   account_key_pem = var.account_key_pem
   subject_alternative_names = [
@@ -30,7 +30,7 @@ data "nutanix_cluster" "cluster" {
 }
 
 resource "aws_route53_record" "API" {
-  zone_id = "Z0807287146Q4KF4CRHAX"
+  zone_id = var.ZONE_ID
   name    = format("api.%s.%s", var.subdomain, var.zone)
   type    = "A"
   ttl     = 300
@@ -38,7 +38,7 @@ resource "aws_route53_record" "API" {
 }
 
 resource "aws_route53_record" "API-int" {
-  zone_id = "Z0807287146Q4KF4CRHAX"
+  zone_id = var.ZONE_ID
   name    = format("api-int.%s.%s", var.subdomain, var.zone)
   type    = "A"
   ttl     = 300
@@ -46,7 +46,7 @@ resource "aws_route53_record" "API-int" {
 }
 
 resource "aws_route53_record" "INGRESS" {
-  zone_id = "Z0807287146Q4KF4CRHAX"
+  zone_id = var.ZONE_ID
   name    = format("*.apps.%s.%s", var.subdomain, var.zone)
   type    = "A"
   ttl     = 300

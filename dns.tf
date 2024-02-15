@@ -1,5 +1,5 @@
 resource "aws_route53_record" "bastion" {
-  zone_id = "Z0807287146Q4KF4CRHAX"
+  zone_id = var.ZONE_ID
   name    = format("%s.%s",var.installer_name,var.ZONE)
   type    = "A"
   ttl     = 300

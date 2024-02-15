@@ -25,6 +25,8 @@ clean_network:
 clean_zone:
 	terraform destroy -state=state/${TF_VAR_ZONE}-state.tfstate
 	rm state/${TF_VAR_ZONE}-state.tfstate*
+refresh_certs:
+	terraform destroy -target=module.openshift-cluster.module.cert_ocp.acme_certificate.certificate -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
 
 status:
 	terraform output -state=state/${TF_VAR_ZONE}-state.tfstate

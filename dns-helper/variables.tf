@@ -5,3 +5,7 @@ variable "subdomain" {
 variable "ip" {
   type = string
 }
+
+variable "ZONE_ID" {
+  type = string
+}

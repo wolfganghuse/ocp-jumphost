@@ -1,7 +1,7 @@
 
 
 resource "aws_route53_record" "PC" {
-  zone_id = "Z0807287146Q4KF4CRHAX"
+  zone_id = var.ZONE_ID
   name    = format("pc.%s", var.ZONE)
   type    = "A"
   ttl     = 300
@@ -9,7 +9,7 @@ resource "aws_route53_record" "PC" {
 }
 
 resource "aws_route53_record" "Objects" {
-  zone_id = "Z0807287146Q4KF4CRHAX"
+  zone_id = var.ZONE_ID
   name    = format("objects.%s", var.ZONE)
   type    = "A"
   ttl     = 300

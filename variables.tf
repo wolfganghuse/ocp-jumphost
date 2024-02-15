@@ -129,6 +129,10 @@ variable "OBJECTS_ENDPOINT" {
   type = string
 }
 
+variable "ZONE_ID" {
+  type = string
+}
+
 variable "cluster_role" {
   type = string
 }

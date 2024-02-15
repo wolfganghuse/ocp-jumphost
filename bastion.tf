@@ -81,6 +81,10 @@ resource "nutanix_virtual_machine" "installer" {
   }
 
   provisioner "file" {
+    source      = "${path.module}/files/"
+    destination = "."
+  }
+  provisioner "file" {
     content      = templatefile("./templates/bastion.tftpl", {
     ocp_basedir = var.ocp_basedir
     })

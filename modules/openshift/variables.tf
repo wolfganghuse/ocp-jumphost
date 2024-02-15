@@ -107,3 +107,7 @@ variable "CSI_BETA" {
 
   type = string
 }
+
+variable "ZONE_ID" {
+  type = string
+}

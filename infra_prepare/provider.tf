@@ -29,5 +29,5 @@ provider "acme" {
 
 provider "aws" {
   region = "us-east-1"
-  shared_credentials_files = ["/Users/wolfgang.huse/.aws/credentials"]
+  shared_credentials_files = ["~/.aws/credentials"]
 }
