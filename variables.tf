@@ -129,6 +129,10 @@ variable "ZONE_ID" {
   type = string
 }
 
+variable "PROXY_CACHE" {
+  type = string
+}
+
 variable "cluster_role" {
   type = string
 }

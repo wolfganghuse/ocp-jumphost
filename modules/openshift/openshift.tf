@@ -127,7 +127,7 @@ resource "null_resource" "installer" {
         ca = indent(2,module.cert_ocp.issuer_pem)
         mirror = var.mirror_host
         mirror_repo = var.mirror_repo
-    }) : ""
+    }) : var.PROXY_CACHE ? templatefile("${path.module}/templates/install-config-proxy-cache.tftpl", {}) : ""
     ssh = file(var.ssh_pub)
     })
     
@@ -154,6 +154,7 @@ resource "null_resource" "installer" {
   provisioner "file" {
     content    = templatefile("${path.module}/templates/create_ocp.tftpl", {
     additionalCommands = "${var.cluster_role == "hub" ? "" : "sh infranodes.sh"}"
+    proxy_cache = "${var.PROXY_CACHE ? "sh proxy-cache.sh" : ""}"
     hybridnetwork = "${var.cluster_role == "windows" ? "cp cluster-network-03-config.yaml manifests" : ""}"
     mirrorCommands = "${var.mirror ? "sh disconnect.sh" : ""}"
     })

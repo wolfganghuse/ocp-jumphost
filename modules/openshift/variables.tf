@@ -108,3 +108,7 @@ variable "CSI_BETA" {
 variable "ZONE_ID" {
   type = string
 }
+
+variable "PROXY_CACHE" {
+  type = string
+}

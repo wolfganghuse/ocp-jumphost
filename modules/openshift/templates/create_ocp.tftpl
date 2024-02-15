@@ -14,6 +14,7 @@ else
     echo "Cluster successfully installed"
 fi
 echo "Running Day-2 actions"
+${proxy_cache}
 ${additionalCommands}
 ${mirrorCommands}
 sh certs.sh

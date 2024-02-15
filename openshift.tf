@@ -38,6 +38,7 @@ module "openshift-cluster" {
   ocp_ver           = var.ocp_ver
   ZONE_ID           = var.ZONE_ID
   CSI_BETA          = var.BETA_CSI
+  PROXY_CACHE       = var.PROXY_CACHE
 
   pullsecret        = var.pullsecret
 }
