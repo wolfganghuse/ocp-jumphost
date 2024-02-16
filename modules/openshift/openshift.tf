@@ -127,7 +127,7 @@ resource "null_resource" "installer" {
         ca = indent(2,module.cert_ocp.issuer_pem)
         mirror = var.mirror_host
         mirror_repo = var.mirror_repo
-    }) : var.PROXY_CACHE ? templatefile("${path.module}/templates/install-config-proxy-cache.tftpl", {}) : ""
+    }) : ""
     ssh = file(var.ssh_pub)
     })
     
