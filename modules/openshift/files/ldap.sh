@@ -1,4 +1,4 @@
-oc --kubeconfig=auth/kubeconfig create secret generic ldap-secret --from-literal=bindPassword='Nutanix.123' -n openshift-config
+oc --kubeconfig=auth/kubeconfig create secret generic ldap-secret --from-literal=bindPassword='Nutanix.1' -n openshift-config
 cat <<EOF | oc --kubeconfig=auth/kubeconfig apply -f -
 apiVersion: config.openshift.io/v1
 kind: OAuth
@@ -6,47 +6,47 @@ metadata:
   name: cluster
 spec:
   identityProviders:
-  - name: nvd.local 
-    mappingMethod: claim 
+  - name: blaze.dachlab.net
+    mappingMethod: claim
     type: LDAP
     ldap:
       attributes:
-        id: 
+        id:
         - sAMAccountName
         email: []
-        name: 
+        name:
         - displayName
-        preferredUsername: 
+        preferredUsername:
         - sAMAccountName
-      bindDN: administrator@nvd.local 
-      bindPassword: 
+      bindDN: administrator@blaze.dachlab.net
+      bindPassword:
         name: ldap-secret
       insecure: true
-      url: "ldap://nvd.local/CN=Users,DC=nvd,DC=lab?sAMAccountName"
+      url: "ldap://dc.blaze.dachlab.net/CN=Users,DC=blaze,DC=dachlab,DC=net?sAMAccountName"
 EOF
 echo """kind: LDAPSyncConfig
 apiVersion: v1
-url: ldap://nvd.local:389
-bindDN: administrator@nvd.local 
-bindPassword: "Nutanix.123"
+url: ldap://dc.blaze.dachlab.net:389
+bindDN: administrator@blaze.dachlab.net
+bindPassword: "Nutanix.1"
 insecure: true
 groupUIDNameMapping:
-  CN=Domain Admins,CN=Users,DC=nvd,DC=lab: OCP_Cluster_Admins
+  CN=labadmin,CN=Users,DC=blaze,DC=dachlab,DC=net: OCP_Cluster_Admins
 augmentedActiveDirectory:
   groupsQuery:
-    baseDN: CN=users,DC=nvd,DC=lab
+    baseDN: CN=users,DC=blaze,DC=dachlab,DC=net
     scope: sub
     derefAliases: never
     pageSize: 0
   groupUIDAttribute: dn
   groupNameAttributes: [ cn ]
   usersQuery:
-    baseDN: cn=users,dc=nvd,dc=lab
+    baseDN: cn=users,dc=blaze,dc=dachlab,dc=net
     scope: sub
     derefAliases: never
     filter: (objectclass=person)
     pageSize: 0
-  userNameAttributes: [ sAMAccountName ] 
+  userNameAttributes: [ sAMAccountName ]
   groupMembershipAttributes: [ memberOf ]""" > ldapsync.yaml
 
 oc --kubeconfig=auth/kubeconfig adm groups sync --sync-config=ldapsync.yaml --confirm

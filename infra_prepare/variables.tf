@@ -120,10 +120,6 @@ variable "BETA_CSI" {
   type = string
 }
 
-variable "account_key_pem" {
-  type = string
-}
-
 variable "ZONE_ID" {
   type = string
 }
