@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check if two arguments are passed
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <version> <branch> <destination>"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <version> <branch>"
     exit 1
 fi
 
@@ -20,7 +20,7 @@ curl -O $URL
 # Check if the download was successful
 if [ $? -eq 0 ]; then
     echo "Download complete. Extracting file..."
-    tar -xzf openshift-install-linux.tar.gz -C $3 --overwrite
+    tar -xzf openshift-install-linux.tar.gz --overwrite
     echo "Extraction complete."
     sudo install openshift-install /usr/local/bin
     echo "install complete."

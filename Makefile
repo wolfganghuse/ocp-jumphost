@@ -28,5 +28,9 @@ clean_zone:
 refresh_certs:
 	terraform destroy -target=module.openshift-cluster.module.cert_ocp.acme_certificate.certificate -state=state/${TF_VAR_ZONE}-${TF_VAR_OCP_SUBDOMAIN}-state.tfstate
 
+refresh_infra_certs:
+	terraform -chdir=infra_prepare destroy -target=acme_certificate.prismcentral -state=state/${TF_VAR_ZONE}-state.tfstate
+	terraform -chdir=infra_prepare apply -target=acme_certificate.prismcentral -state=state/${TF_VAR_ZONE}-state.tfstate
+
 status:
 	terraform output -state=state/${TF_VAR_ZONE}-state.tfstate

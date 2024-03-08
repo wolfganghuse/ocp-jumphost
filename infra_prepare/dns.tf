@@ -15,3 +15,11 @@ resource "aws_route53_record" "Objects" {
   ttl     = 300
   records = [var.OBJECTS_ENDPOINT]
 }
+
+resource "aws_route53_record" "ObjectsWildcard" {
+  zone_id = var.ZONE_ID
+  name    = format("*.objects.%s", var.ZONE)
+  type    = "A"
+  ttl     = 300
+  records = [var.OBJECTS_ENDPOINT]
+}
