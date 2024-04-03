@@ -7,9 +7,6 @@
 *.tfstate.*
 state/*
 
-terraform/cert/*.key
-terraform/cert/*.crt
-
 secrets.linux.auto.pkrvars.hcl
 .DS_Store
 packer/manifest.json
