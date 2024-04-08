@@ -36,7 +36,7 @@ resource "nutanix_virtual_machine" "installer" {
   }
 
   disk_list {
-    disk_size_mib   = 50000
+    disk_size_mib   = 500000
     data_source_reference = {
         kind = "image"
         uuid = data.nutanix_image.source_image.id
@@ -87,6 +87,7 @@ resource "nutanix_virtual_machine" "installer" {
   provisioner "file" {
     content      = templatefile("./templates/bastion.tftpl", {
     ocp_basedir = var.ocp_basedir
+    CONTAINER_ENGINE= var.CONTAINER_ENGINE == "docker" ? "docker.io" : var.CONTAINER_ENGINE
     })
     destination = "bastion.sh"
   }
@@ -103,6 +104,7 @@ resource "nutanix_virtual_machine" "installer" {
     NUTANIX_SUBNET=var.nutanix_subnet
     NUTANIX_CLUSTER=var.nutanix_cluster
     CSI_BETA=var.BETA_CSI
+    CONTAINER_ENGINE = var.CONTAINER_ENGINE
     })
     destination = ".env"
   }

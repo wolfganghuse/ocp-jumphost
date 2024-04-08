@@ -39,6 +39,9 @@ variable "OCP_INGRESS_VIP_EXTERNAL" {
   type = string
 }
 
+variable "CONTAINER_ENGINE" {
+  type = string
+}
 variable "VPC" {
   type = bool
 }

@@ -1,5 +1,8 @@
 mkdir certs
-cp cert.* certs
 mkdir docker_reg_auth
-podman login
-podman run -it --entrypoint htpasswd -v $PWD/docker_reg_auth:/auth -w /auth registry:2 -Bbc /auth/htpasswd admin password
+mkdir registry
+htpasswd -bnB nutanix nutanix.1 > docker_reg_auth/htpasswd
+cp cert.* certs
+
+#$CONTAINER_ENGINE login
+$CONTAINER_ENGINE container run -d -p 443:5000 --name registry -v "$(pwd)"/docker_reg_auth:/auth -v "$(pwd)"/certs:/certs -v "$(pwd)"/registry:/var/lib/registry -e REGISTRY_AUTH=htpasswd -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/cert.crt -e REGISTRY_HTTP_TLS_KEY=/certs/cert.key registry:2
