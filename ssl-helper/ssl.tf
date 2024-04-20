@@ -1,15 +1,15 @@
 locals {
-  domain = "gptnvd.cloudnative.nvdlab.net"
+  domain = "codeium.cloudnative.nvdlab.net"
 }
 
 module "cert" {
   source              = "../modules/ssl"
   
-
+  ZONE_ID = var.ZONE_ID
   common_name = local.domain
   subject_alternative_names = [
     format("*.%s", local.domain),
-    format("*.objects.%s", local.domain)
+    #format("*.objects.%s", local.domain)
   ]
 }      
 
