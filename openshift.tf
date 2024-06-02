@@ -6,9 +6,9 @@ module "openshift-cluster" {
     nutanix = nutanix.AZ01
   }
 
-  depends_on = [
-    data.terraform_remote_state.zone
-  ]
+  # depends_on = [
+  #   data.terraform_remote_state.zone
+  # ]
 
 
   PC_USER           = var.PC_USER
