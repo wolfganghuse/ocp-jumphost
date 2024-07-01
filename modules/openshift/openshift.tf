@@ -166,6 +166,11 @@ resource "null_resource" "installer" {
     ]
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      format("cp ./%s/install-config.yaml ./%s/install-config.yaml.x", local.config_folder, local.config_folder)
+    ]
+  }
 }
 
 resource "null_resource" "bastion_disconnected" {
