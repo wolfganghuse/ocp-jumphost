@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloud-conf
+  namespace: openshift-cloud-controller-manager
+data:
+  cloud.conf: "{
+      \"prismCentral\": {
+          \"address\": \"${address}\",
+          \"port\": 9440,
+            \"credentialRef\": {
+                \"kind\": \"Secret\",
+                \"name\": \"nutanix-credentials\",
+                \"namespace\": \"openshift-cloud-controller-manager\"
+            }
+       },
+       \"topologyDiscovery\": {
+           \"type\": \"Prism\",
+           \"topologyCategories\": null
+       },
+       \"enableCustomLabeling\": true
+     }"

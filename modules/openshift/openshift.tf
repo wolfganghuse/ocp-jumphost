@@ -100,7 +100,12 @@ resource "null_resource" "installer" {
     })
     destination = format("./%s/openshift-cloud-controller-manager-nutanix-credentials-credentials.yaml", local.config_folder)
   }
-
+  provisioner "file" {
+    content    = templatefile("${path.module}/templates/openshift-cloud-controller-manager-cloud-config.tftpl", {
+    address = local.pc
+    })
+    destination = format("./%s/openshift-cloud-controller-manager-cloud-config.yaml", local.config_folder)
+  }
   provisioner "file" {
     content    = templatefile("${path.module}/templates/install-config.tftpl", {
     user = var.PC_USER
