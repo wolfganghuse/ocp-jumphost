@@ -1,5 +1,5 @@
 locals {
-  domain = "codeium.cloudnative.nvdlab.net"
+  domain = var.full_domain
 }
 
 module "cert" {
@@ -24,6 +24,11 @@ resource "local_file" "key" {
 }
 resource "local_file" "ca" {
   content      = module.cert.issuer_pem
-  filename = format("ca-%s.crt",local.domain)
+  filename = format("%s-ca.crt",local.domain)
+}
+
+resource "local_file" "fullchain" {
+  content      =   "${module.cert.certificate_pem}\n${module.cert.issuer_pem}"
+  filename = format("%s-fullchain.crt",local.domain)
 }
 

@@ -49,7 +49,7 @@ EOF
   done
 fi
 
-starting_csv=$(oc  --kubeconfig=auth/kubeconfig get packagemanifests nutanixcsioperator -o jsonpath=\{.status.channels[*].currentCSV\})
+starting_csv=$(oc  --kubeconfig=auth/kubeconfig get packagemanifests nutanixcsioperator -o jsonpath=\{.status.channels[0].currentCSV\})
 source=$(oc  --kubeconfig=auth/kubeconfig get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSource\})
 source_namespace=$(oc  --kubeconfig=auth/kubeconfig get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSourceNamespace\})
 

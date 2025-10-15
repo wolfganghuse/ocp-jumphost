@@ -30,7 +30,7 @@ refresh_certs:
 
 refresh_infra_certs:
 	tofu -chdir=infra_prepare destroy -target=acme_certificate.prismcentral -state=state/${TF_VAR_ZONE}-state.tfstate
-	tofu -chdir=infra_prepare apply -target=acme_certificate.prismcentral -state=state/${TF_VAR_ZONE}-state.tfstate
+	tofu -chdir=infra_prepare apply -state=state/${TF_VAR_ZONE}-state.tfstate
 
 status:
 	tofu output -state=state/${TF_VAR_ZONE}-state.tfstate

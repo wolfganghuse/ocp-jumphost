@@ -1,0 +1,67 @@
+# module "user2dr" {
+#   source              = "../modules/network"
+#   providers = {
+#     nutanix = nutanix.AZ02
+#   }
+
+#   nutanix_cluster     = "dr"
+#   subnet_name         = "User2.dr"
+#   subnet_vlan         = 117
+#   subnet_ip           = "10.122.17.0"
+#   subnet_prefix       = "24"
+#   subnet_gateway      = "10.122.17.1"
+#   subnet_dns_list     = ["10.22.64.15","10.22.64.16"]
+#   subnet_search_list  = [""]
+#   subnet_pool_list    = ["10.122.17.190 10.122.17.199"]
+# }
+
+module "user1dh1" {
+  source              = "../modules/network"
+  providers = {
+    nutanix = nutanix.AZ01
+  }
+
+  nutanix_cluster     = "dh1"
+  subnet_name         = "User1.dh1"
+  subnet_vlan         = 107
+  subnet_ip           = "10.122.7.0"
+  subnet_prefix       = "24"
+  subnet_gateway      = "10.122.7.1"
+  subnet_dns_list     = ["10.22.64.15","10.22.64.16"]
+  subnet_search_list  = [""]
+  subnet_pool_list    = ["10.122.7.160 10.122.7.169"]
+}
+
+module "user1dh2" {
+  source              = "../modules/network"
+  providers = {
+    nutanix = nutanix.AZ01
+  }
+
+  nutanix_cluster     = "dh2"
+  subnet_name         = "User1.dh2"
+  subnet_vlan         = 107
+  subnet_ip           = "10.122.7.0"
+  subnet_prefix       = "24"
+  subnet_gateway      = "10.122.7.1"
+  subnet_dns_list     = ["10.22.64.15","10.22.64.16"]
+  subnet_search_list  = [""]
+  subnet_pool_list    = ["10.122.7.170 10.122.7.179"]
+}
+
+module "user1dh3" {
+  source              = "../modules/network"
+  providers = {
+    nutanix = nutanix.AZ01
+  }
+
+  nutanix_cluster     = "dh3"
+  subnet_name         = "User1.dh3"
+  subnet_vlan         = 107
+  subnet_ip           = "10.122.7.0"
+  subnet_prefix       = "24"
+  subnet_gateway      = "10.122.7.1"
+  subnet_dns_list     = ["10.22.64.15","10.22.64.16"]
+  subnet_search_list  = [""]
+  subnet_pool_list    = ["10.122.7.180 10.122.7.189"]
+}

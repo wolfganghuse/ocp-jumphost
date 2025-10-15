@@ -18,7 +18,7 @@ module "openshift-cluster" {
   ssh_priv          = var.JUMPHOST_PRIVATE_SSH
   ssh_pub           = var.JUMPHOST_PUBLIC_SSH
   user              = "ubuntu"
-  bastion_fqdn      = data.terraform_remote_state.zone.outputs.ip_address
+  bastion_fqdn      = data.terraform_remote_state.zone.outputs.bastion_ip_address
   basedomain        = var.OCP_BASEDOMAIN
   mirror            = var.USE_MIRROR
   mirror_repo       = var.MIRROR_REPO
