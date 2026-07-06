@@ -67,18 +67,18 @@ resource "nutanix_virtual_machine" "installer" {
     //host    = "10.48.38.98"
   }
 
-  provisioner "file" {
-    content      = acme_certificate.bastion.certificate_pem
-    destination = "cert.crt"
-  }
-  provisioner "file" {
-    content      = acme_certificate.bastion.private_key_pem
-    destination = "cert.key"
-  }
-    provisioner "file" {
-    content      = acme_certificate.bastion.issuer_pem
-    destination = "ca.crt"
-  }
+  # provisioner "file" {
+  #   content      = acme_certificate.bastion.certificate_pem
+  #   destination = "cert.crt"
+  # }
+  # provisioner "file" {
+  #   content      = acme_certificate.bastion.private_key_pem
+  #   destination = "cert.key"
+  # }
+  #   provisioner "file" {
+  #   content      = acme_certificate.bastion.issuer_pem
+  #   destination = "ca.crt"
+  # }
 
   provisioner "file" {
     source      = "${path.module}/files/"

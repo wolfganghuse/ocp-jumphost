@@ -60,7 +60,7 @@ metadata:
   name: nutanixcsioperator
   namespace: openshift-cluster-csi-drivers
 spec:
-  channel: stable
+  channel: stable-3.x
   installPlanApproval: Automatic
   name: nutanixcsioperator
   source: ${source}
@@ -94,18 +94,20 @@ kind: NutanixCsiStorage
 metadata:
   name: nutanixcsistorage
   namespace: openshift-cluster-csi-drivers
-spec: {}
+spec:
+  ntnxInitConfigMap:
+    usePC: true
 EOF
 
 cat <<EOF | oc  --kubeconfig=auth/kubeconfig create -f -
 apiVersion: v1
 kind: Secret
 metadata:
-  name: ntnx-secret
+  name: ntnx-pc-secret
   namespace: openshift-cluster-csi-drivers
 stringData:
   # prism-element-ip:prism-port:admin:password
-  key: ${PE_HOST}:${PE_PORT}:${PE_USERNAME}:${PE_PASSWORD}
+  key: ${NUTANIX_ENDPOINT}:${PE_PORT}:${NUTANIX_USERNAME}:${NUTANIX_PASSWORD}
 EOF
 
 NUTANIX_STORAGE_CONTAINER=SelfServiceContainer
@@ -121,12 +123,12 @@ provisioner: csi.nutanix.com
 parameters:
   csi.storage.k8s.io/fstype: ext4
   csi.storage.k8s.io/provisioner-secret-namespace: openshift-cluster-csi-drivers
-  csi.storage.k8s.io/provisioner-secret-name: ntnx-secret
+  csi.storage.k8s.io/provisioner-secret-name: ntnx-pc-secret
   storageContainer: ${NUTANIX_STORAGE_CONTAINER}
-  csi.storage.k8s.io/controller-expand-secret-name: ntnx-secret
+  csi.storage.k8s.io/controller-expand-secret-name: ntnx-pc-secret
   csi.storage.k8s.io/node-publish-secret-namespace: openshift-cluster-csi-drivers
   storageType: NutanixVolumes
-  csi.storage.k8s.io/node-publish-secret-name: ntnx-secret
+  csi.storage.k8s.io/node-publish-secret-name: ntnx-pc-secret
   csi.storage.k8s.io/controller-expand-secret-namespace: openshift-cluster-csi-drivers
 reclaimPolicy: Delete
 allowVolumeExpansion: true

@@ -9,7 +9,7 @@ module "cert" {
   common_name = local.domain
   subject_alternative_names = [
     format("*.%s", local.domain),
-    #format("*.objects.%s", local.domain)
+    format("*.objects.%s", local.domain)
   ]
 }      
 
